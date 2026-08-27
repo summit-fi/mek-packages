@@ -9,14 +9,16 @@ class TerminalDelegatePlugin: NSObject, ConnectionTokenProvider, TerminalDelegat
     }
     
     func fetchConnectionToken(_ completion: @escaping (String?, (any Error)?) -> Void) {
-        self.handlers.requestConnectionToken { result in
-            switch result {
-                case .success(let token):
-                    completion(token, nil)
+        DispatchQueue.main.async {
+            self.handlers.requestConnectionToken { result in
+                switch result {
+                    case .success(let token):
+                        completion(token, nil)
 
-                case .failure(let error):
-                    completion(nil, error)
-                }
+                    case .failure(let error):
+                        completion(nil, error)
+                    }
+            }
         }
     }
 
