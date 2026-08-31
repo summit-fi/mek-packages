@@ -215,9 +215,14 @@ class Terminal {
   /// See https://stripe.com/docs/terminal/readers/connecting.
   Future<Reader> connectReader(Reader reader, {required ConnectionConfiguration configuration}) =>
       _run(() async {
+        final serialNumber = reader.serialNumber;
+        if (serialNumber == null) {
+          throw ArgumentError('Reader must have a valid serial number to connect.');
+        }
+
         return await _handlers.handleReaderConnection(configuration.readerDelegate, () async {
           return await _platform.connectReader(
-            reader.serialNumber,
+            serialNumber,
             configuration as ConnectionConfigurationApi,
           );
         });
@@ -331,9 +336,14 @@ class Terminal {
     ConfirmPaymentIntentConfiguration? confirmConfiguration,
   }) {
     return _CancelableFuture(_platform.stopProcessPaymentIntent, (id) async {
+      final paymentIntentId = paymentIntent.id;
+      if (paymentIntentId == null) {
+        throw ArgumentError('PaymentIntent must have a valid id to process a payment.');
+      }
+
       return await _platform.startProcessPaymentIntent(
         operationId: id,
-        paymentIntentId: paymentIntent.id,
+        paymentIntentId: paymentIntentId,
         requestDynamicCurrencyConversion: requestDynamicCurrencyConversion,
         surchargeNotice: surchargeNotice,
         skipTipping: skipTipping,
@@ -353,7 +363,12 @@ class Terminal {
   ///
   /// Note: This cannot be used with the Verifone P400 reader.
   Future<PaymentIntent> cancelPaymentIntent(PaymentIntent paymentIntent) => _run(() async {
-    return await _platform.cancelPaymentIntent(paymentIntent.id);
+    final paymentIntentId = paymentIntent.id;
+    if (paymentIntentId == null) {
+      throw ArgumentError('PaymentIntent must have a valid id to cancel a payment.');
+    }
+
+    return await _platform.cancelPaymentIntent(paymentIntentId);
   });
   //endregion
 
@@ -399,9 +414,14 @@ class Terminal {
     bool customerCancellationEnabled = true,
   }) {
     return _CancelableFuture(_platform.stopProcessSetupIntent, (id) async {
+      final setupIntentId = setupIntent.id;
+      if (setupIntentId == null) {
+        throw ArgumentError('SetupIntent must have a valid id to process setup.');
+      }
+
       return await _platform.startProcessSetupIntent(
         operationId: id,
-        setupIntentId: setupIntent.id,
+        setupIntentId: setupIntentId,
         allowRedisplay: allowRedisplay,
         customerCancellationEnabled: customerCancellationEnabled,
       );
@@ -413,7 +433,12 @@ class Terminal {
   /// If the cancel request succeeds returns the updated [SetupIntent] object with status
   /// [SetupIntentStatus.cancelled].
   Future<SetupIntent> cancelSetupIntent(SetupIntent setupIntent) => _run(() async {
-    return await _platform.cancelSetupIntent(setupIntent.id);
+    final setupIntentId = setupIntent.id;
+    if (setupIntentId == null) {
+      throw ArgumentError('SetupIntent must have a valid id to cancel setup.');
+    }
+
+    return await _platform.cancelSetupIntent(setupIntentId);
   });
 
   //endregion
@@ -453,12 +478,16 @@ class Terminal {
     bool? refundApplicationFee,
     bool customerCancellationEnabled = true,
   }) {
-    if (chargeId != null || (paymentIntentId != null && paymentIntentClientSecret != null)) {
+    final hasChargeId = chargeId != null;
+    final hasPaymentIntentId = paymentIntentId != null;
+    final hasPaymentIntentClientSecret = paymentIntentClientSecret != null;
+    final hasCompletePaymentIntent = hasPaymentIntentId && hasPaymentIntentClientSecret;
+    if ((hasChargeId && (hasPaymentIntentId || hasPaymentIntentClientSecret)) ||
+        (!hasChargeId && !hasCompletePaymentIntent)) {
       throw ArgumentError(
-        'Either chargeId or (paymentIntentId and paymentIntentClientSecret) params must be provided to refund.',
+        'Provide exactly one refund target: chargeId or both paymentIntentId and paymentIntentClientSecret.',
       );
     }
-    assert(!(chargeId != null && (paymentIntentId != null || paymentIntentClientSecret != null)));
 
     return _CancelableFuture(_platform.stopProcessRefund, (id) async {
       return await _platform.startProcessRefund(

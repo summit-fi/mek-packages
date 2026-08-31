@@ -13,8 +13,8 @@ extension Reader {
             location: location?.toApi(),
             serialNumber: serialNumber,
             deviceSoftwareVersion: deviceSoftwareVersion,
-            availableUpdate: availableUpdate != nil,
-            batteryLevel: batteryLevel?.doubleValue ?? -1.0,
+            availableUpdate: availableUpdate != nil ? true : nil,
+            batteryLevel: batteryLevel?.doubleValue,
             ipAddress: ipAddress,
             networkStatus: status.toApi(),
             label: label
@@ -29,7 +29,7 @@ extension Location {
             displayName: displayName,
             id: stripeId,
             livemode: livemode,
-            metadata: metadata ?? [:]
+            metadata: metadata
         )
     }
 }

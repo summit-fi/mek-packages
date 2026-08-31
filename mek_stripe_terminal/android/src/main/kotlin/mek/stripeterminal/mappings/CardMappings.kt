@@ -79,7 +79,7 @@ fun ReceiptDetails.toApi(): ReceiptDetailsApi {
         accountType = accountType,
         applicationPreferredName = applicationPreferredName,
         authorizationCode = authorizationCode,
-        authorizationResponseCode = authorizationResponseCode ?: "",
+        authorizationResponseCode = authorizationResponseCode,
         applicationCryptogram = applicationCryptogram,
         dedicatedFileName = dedicatedFileName,
         transactionStatusInformation = tsi,

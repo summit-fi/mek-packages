@@ -191,7 +191,10 @@ public class TerminalPlugin: NSObject, FlutterPlugin, TerminalPlatformApi {
     ) {
         handleResult(completion) {
             let paymentIntent = try await Terminal.shared.createPaymentIntent(parameters.toHost())
-            self._paymentIntents[paymentIntent.stripeId!] = paymentIntent
+            guard let paymentIntentId = paymentIntent.stripeId else {
+                throw createApiException(.paymentIntentNotRecovered).toPlatformError()
+            }
+            self._paymentIntents[paymentIntentId] = paymentIntent
             return paymentIntent.toApi()
         }
     }
@@ -202,7 +205,10 @@ public class TerminalPlugin: NSObject, FlutterPlugin, TerminalPlatformApi {
     ) {
         handleResult(completion) {
             let paymentIntent = try await Terminal.shared.retrievePaymentIntent(clientSecret: clientSecret)
-            self._paymentIntents[paymentIntent.stripeId!] = paymentIntent
+            guard let paymentIntentId = paymentIntent.stripeId else {
+                throw createApiException(.paymentIntentNotRecovered).toPlatformError()
+            }
+            self._paymentIntents[paymentIntentId] = paymentIntent
             return paymentIntent.toApi()
         }
     }
@@ -245,8 +251,12 @@ public class TerminalPlugin: NSObject, FlutterPlugin, TerminalPlatformApi {
                     completion(.failure(error.toPlatformError()))
                     return
                 }
-                self._paymentIntents[paymentIntent!.stripeId!] = paymentIntent!
-                completion(.success(paymentIntent!.toApi()))
+                guard let paymentIntent, let paymentIntentId = paymentIntent.stripeId else {
+                    completion(.failure(createApiException(.paymentIntentNotRecovered).toPlatformError()))
+                    return
+                }
+                self._paymentIntents[paymentIntentId] = paymentIntent
+                completion(.success(paymentIntent.toApi()))
             })
         }
     }
@@ -288,7 +298,10 @@ public class TerminalPlugin: NSObject, FlutterPlugin, TerminalPlatformApi {
             usage.apply { params.setUsage($0.toHost()) }
             do {
                 let setupIntent = try await Terminal.shared.createSetupIntent(params.build())
-                self._setupIntents[setupIntent.stripeId!] = setupIntent
+                guard let setupIntentId = setupIntent.stripeId else {
+                    throw createApiException(.setupIntentNotRecovered).toPlatformError()
+                }
+                self._setupIntents[setupIntentId] = setupIntent
                 return setupIntent.toApi()
             } catch let error as NSError {
                 throw error.toPlatformError()
@@ -299,7 +312,10 @@ public class TerminalPlugin: NSObject, FlutterPlugin, TerminalPlatformApi {
     func retrieveSetupIntent(clientSecret: String, completion: @escaping (Result<SetupIntentApi, any Error>) -> Void) {
         handleResult(completion) {
             let setupIntent = try await Terminal.shared.retrieveSetupIntent(clientSecret: clientSecret)
-            self._setupIntents[setupIntent.stripeId!] = setupIntent
+            guard let setupIntentId = setupIntent.stripeId else {
+                throw createApiException(.setupIntentNotRecovered).toPlatformError()
+            }
+            self._setupIntents[setupIntentId] = setupIntent
             return setupIntent.toApi()
         }
     }
@@ -326,8 +342,12 @@ public class TerminalPlugin: NSObject, FlutterPlugin, TerminalPlatformApi {
                         completion(.failure(error.toPlatformError()))
                         return
                     }
-                    self._setupIntents[setupIntent!.stripeId!] = setupIntent!
-                    completion(.success(setupIntent!.toApi()))
+                    guard let setupIntent, let setupIntentId = setupIntent.stripeId else {
+                        completion(.failure(createApiException(.setupIntentNotRecovered).toPlatformError()))
+                        return
+                    }
+                    self._setupIntents[setupIntentId] = setupIntent
+                    completion(.success(setupIntent.toApi()))
             })
         }
     }

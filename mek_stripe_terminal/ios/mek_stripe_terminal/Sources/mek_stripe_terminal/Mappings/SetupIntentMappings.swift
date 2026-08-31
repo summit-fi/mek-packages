@@ -4,10 +4,10 @@ import StripeTerminal
 extension SetupIntent {
     func toApi() -> SetupIntentApi {
         return SetupIntentApi(
-            id: stripeId!,
+            id: stripeId,
             createdInMilliseconds: created.toMillisecondsSinceEpoch(),
             customerId: customer,
-            metadata: metadata ?? [:],
+            metadata: metadata,
             usage: usage.toApi(),
             status: status.toApi(),
             latestAttempt: latestAttempt?.toApi()

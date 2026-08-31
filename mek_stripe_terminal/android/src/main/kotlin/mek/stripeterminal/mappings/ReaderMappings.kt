@@ -46,15 +46,15 @@ import mek.stripeterminal.toHashMap
 fun Reader.toApi(): ReaderApi {
     return ReaderApi(
         locationStatus = locationStatus.toApi(),
-        batteryLevel = batteryLevel?.toDouble() ?: -1.0,
+        batteryLevel = batteryLevel?.toDouble(),
         deviceType = deviceType.toApi(),
         id = id,
         simulated = isSimulated,
-        availableUpdate = availableUpdate?.hasFirmwareUpdate ?: false,
+        availableUpdate = availableUpdate?.hasFirmwareUpdate,
         locationId = location?.id,
         location = location?.toApi(),
         label = label,
-        serialNumber = serialNumber!!,
+        serialNumber = serialNumber,
         deviceSoftwareVersion = softwareVersion,
         ipAddress = ipAddress,
         networkStatus = networkStatus?.toApi()
@@ -113,7 +113,7 @@ fun Location.toApi(): LocationApi {
         displayName = displayName,
         id = id,
         livemode = livemode,
-        metadata = metadata?.toHashMap() ?: hashMapOf()
+        metadata = metadata?.toHashMap()
     )
 }
 

@@ -6,9 +6,10 @@ typedef Reader = ReaderApi;
 
 extension ReaderUtils on Reader {
   BatteryStatusApi? get batteryStatus {
-    if (batteryLevel == -1) return null;
+    final level = batteryLevel;
+    if (level == null || level == -1) return null;
     return BatteryStatusApi.values.singleWhere((e) {
-      return batteryLevel > e.minLevel && batteryLevel < e.maxLevel;
+      return level > e.minLevel && level < e.maxLevel;
     });
   }
 }

@@ -211,11 +211,13 @@ class _ReadersScreenState extends ConsumerState<ReadersScreen> with StateTools {
                     (connectedReader == null ||
                         connectedReader.serialNumber == reader.serialNumber),
                 onTap: () => mutate(() async => _connectReader(reader)),
-                title: Text(reader.serialNumber),
+                title: Text(reader.serialNumber ?? 'Unknown serial number'),
                 subtitle: Text(
                   '${reader.deviceType?.name ?? 'Unknown'} ${reader.locationId ?? 'NoLocation'}',
                 ),
-                trailing: Text('${(reader.batteryLevel * 100).toInt()}'),
+                trailing: Text(
+                  reader.batteryLevel != null ? '${(reader.batteryLevel! * 100).toInt()}' : '—',
+                ),
               );
             }),
             if (connectedReader != null) ...[

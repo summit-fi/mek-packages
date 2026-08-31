@@ -33,7 +33,7 @@ class PaymentMethodApi {
 
   /// Set of key-value pairs that you can attach to an object. This can be useful for storing
   /// additional information about the object in a structured format.
-  final Map<String, String> metadata;
+  final Map<String, String>? metadata;
 
   const PaymentMethodApi({
     required this.id,
@@ -41,6 +41,6 @@ class PaymentMethodApi {
     required this.cardPresent,
     required this.interactPresent,
     required this.customerId,
-    this.metadata = const <String, String>{},
+    required this.metadata,
   });
 }

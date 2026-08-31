@@ -3,7 +3,7 @@ class LocationApi {
   final String? displayName;
   final String? id;
   final bool? livemode;
-  final Map<String, String> metadata;
+  final Map<String, String>? metadata;
 
   const LocationApi({
     required this.address,

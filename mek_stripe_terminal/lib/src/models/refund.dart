@@ -7,5 +7,7 @@ typedef RefundStatus = RefundStatusApi;
 typedef PaymentMethodDetails = PaymentMethodDetailsApi;
 
 extension RefundUtils on RefundApi {
-  DateTime get created => DateTime.fromMillisecondsSinceEpoch(createdInMilliseconds, isUtc: true);
+  DateTime? get created => createdInMilliseconds != null
+      ? DateTime.fromMillisecondsSinceEpoch(createdInMilliseconds!, isUtc: true)
+      : null;
 }

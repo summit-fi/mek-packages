@@ -4,18 +4,18 @@ import StripeTerminal
 extension PaymentIntent {
     func toApi() -> PaymentIntentApi {
         return PaymentIntentApi(
-            id: stripeId!,
+            id: stripeId,
             createdInMilliseconds: created.toMillisecondsSinceEpoch(),
             status: status.toApi(),
-            amount: Double(amount),
+            amount: amount.toInt64(),
             captureMethod: captureMethod.toApi(),
             currency: currency,
-            metadata: metadata ?? [:],
+            metadata: metadata,
             charges: charges.map { $0.toApi() },
             paymentMethod: paymentMethod?.toApi(),
             paymentMethodId: paymentMethodId,
             amountDetails: amountDetails?.toApi(),
-            amountTip: amountTip != nil ? Double(truncating: amountTip!) : nil,
+            amountTip: amountTip?.toInt64(),
             statementDescriptor: statementDescriptor,
             statementDescriptorSuffix: statementDescriptorSuffix,
             amountCapturable: nil,

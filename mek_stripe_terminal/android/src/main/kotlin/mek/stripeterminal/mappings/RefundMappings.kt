@@ -8,11 +8,11 @@ import mek.stripeterminal.toHashMap
 fun Refund.toApi(): RefundApi {
     return RefundApi(
         id = id,
-        amount = amount!!,
-        chargeId = chargeId!!,
-        createdInMilliseconds = created!! * 1000,
-        currency = currency!!,
-        metadata = metadata?.toHashMap() ?: HashMap(),
+        amount = amount,
+        chargeId = chargeId,
+        createdInMilliseconds = created?.times(1000),
+        currency = currency,
+        metadata = metadata?.toHashMap(),
         reason = reason,
         status = when (status) {
             "succeeded" -> RefundStatusApi.SUCCEEDED

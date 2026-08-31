@@ -59,7 +59,7 @@ class ReaderApi {
   final LocationApi? location;
 
   /// The reader’s serial number.
-  final String serialNumber;
+  final String? serialNumber;
 
   /// The reader's current device software version, or `null` if this
   /// information is unavailable.
@@ -74,10 +74,10 @@ class ReaderApi {
   ///
   /// calls to [Terminal.installAvailableUpdate] when availableUpdate is `null` will result in
   /// [PhysicalReaderDelegate.onFinishInstallingUpdate] called immediately with a `null` update and `null` error.
-  final bool availableUpdate;
+  final bool? availableUpdate;
 
   /// The reader’s battery level, represented as a boxed float in the range [0, 1]. If the reader does not have a battery, or the battery level is unknown, this value is nil.
-  final double batteryLevel;
+  final double? batteryLevel;
 
   // TODO: Add isCharging/bluetoothDevice field
 

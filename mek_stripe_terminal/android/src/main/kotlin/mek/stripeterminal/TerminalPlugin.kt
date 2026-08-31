@@ -297,7 +297,20 @@ class TerminalPlatformPlugin(
             callback =
                 object : TerminalErrorHandler<PaymentIntentApi>(callback), PaymentIntentCallback {
                     override fun onSuccess(paymentIntent: PaymentIntent) {
-                        paymentIntents[paymentIntent.id!!] = paymentIntent
+                        val paymentIntentId = paymentIntent.id
+                        if (paymentIntentId == null) {
+                            callback(
+                                Result.failure(
+                                    createError(
+                                        createApiException(
+                                            TerminalExceptionCodeApi.PAYMENT_INTENT_NOT_RECOVERED
+                                        )
+                                    )
+                                )
+                            )
+                            return
+                        }
+                        paymentIntents[paymentIntentId] = paymentIntent
                         callback(Result.success(paymentIntent.toApi()))
                     }
                 }
@@ -311,7 +324,20 @@ class TerminalPlatformPlugin(
             clientSecret,
             object : TerminalErrorHandler<PaymentIntentApi>(callback), PaymentIntentCallback {
                 override fun onSuccess(paymentIntent: PaymentIntent) {
-                    paymentIntents[paymentIntent.id!!] = paymentIntent
+                    val paymentIntentId = paymentIntent.id
+                    if (paymentIntentId == null) {
+                        callback(
+                            Result.failure(
+                                createError(
+                                    createApiException(
+                                        TerminalExceptionCodeApi.PAYMENT_INTENT_NOT_RECOVERED
+                                    )
+                                )
+                            )
+                        )
+                        return
+                    }
+                    paymentIntents[paymentIntentId] = paymentIntent
                     callback(Result.success(paymentIntent.toApi()))
                 }
             }
@@ -379,7 +405,7 @@ class TerminalPlatformPlugin(
                     processPaymentIntentCancelables.remove(operationId)
                     val paymentIntentUpdated = e.paymentIntent
                     if (paymentIntentUpdated != null) {
-                        paymentIntents[paymentIntentUpdated.id!!] = paymentIntentUpdated
+                        paymentIntentUpdated.id?.let { paymentIntents[it] = paymentIntentUpdated }
                     }
                     super.onFailure(e)
                 }
@@ -442,7 +468,20 @@ class TerminalPlatformPlugin(
                 .build(),
             object : TerminalErrorHandler<SetupIntentApi>(callback), SetupIntentCallback {
                 override fun onSuccess(setupIntent: SetupIntent) {
-                    setupIntents[setupIntent.id!!] = setupIntent
+                    val setupIntentId = setupIntent.id
+                    if (setupIntentId == null) {
+                        callback(
+                            Result.failure(
+                                createError(
+                                    createApiException(
+                                        TerminalExceptionCodeApi.SETUP_INTENT_NOT_RECOVERED
+                                    )
+                                )
+                            )
+                        )
+                        return
+                    }
+                    setupIntents[setupIntentId] = setupIntent
                     callback(Result.success(setupIntent.toApi()))
                 }
             }
@@ -457,7 +496,20 @@ class TerminalPlatformPlugin(
             clientSecret,
             object : TerminalErrorHandler<SetupIntentApi>(callback), SetupIntentCallback {
                 override fun onSuccess(setupIntent: SetupIntent) {
-                    setupIntents[setupIntent.id!!] = setupIntent
+                    val setupIntentId = setupIntent.id
+                    if (setupIntentId == null) {
+                        callback(
+                            Result.failure(
+                                createError(
+                                    createApiException(
+                                        TerminalExceptionCodeApi.SETUP_INTENT_NOT_RECOVERED
+                                    )
+                                )
+                            )
+                        )
+                        return
+                    }
+                    setupIntents[setupIntentId] = setupIntent
                     callback(Result.success(setupIntent.toApi()))
                 }
             }
@@ -495,7 +547,20 @@ class TerminalPlatformPlugin(
 
                 override fun onSuccess(setupIntent: SetupIntent) {
                     processSetupIntentCancelables.remove(operationId)
-                    setupIntents[setupIntent.id!!] = setupIntent
+                    val setupIntentId = setupIntent.id
+                    if (setupIntentId == null) {
+                        callback(
+                            Result.failure(
+                                createError(
+                                    createApiException(
+                                        TerminalExceptionCodeApi.SETUP_INTENT_NOT_RECOVERED
+                                    )
+                                )
+                            )
+                        )
+                        return
+                    }
+                    setupIntents[setupIntentId] = setupIntent
                     callback(Result.success(setupIntent.toApi()))
                 }
             }

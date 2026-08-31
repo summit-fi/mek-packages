@@ -6,7 +6,7 @@ extension Refund {
         return RefundApi(
             id: stripeId,
             amount: amount.toInt64(),
-            chargeId: chargeId ?? "",
+            chargeId: chargeId,
             createdInMilliseconds: created.toMillisecondsSinceEpoch(),
             currency: currency,
             metadata: metadata,

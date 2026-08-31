@@ -20,7 +20,7 @@ class ChargeApi {
   final int amount;
 
   /// The currency of the charge.
-  final String currency;
+  final String? currency;
 
   /// The status of the charge.
   final ChargeStatusApi status;
@@ -37,7 +37,7 @@ class ChargeApi {
   /// Metadata associated with the charge.
   ///
   /// See https://stripe.com/docs/api#metadata
-  final Map<String, String> metadata;
+  final Map<String, String>? metadata;
 
   /// Extra dynamic information about a Charge. This will appear concatenated with the
   /// statementDescriptor on your customer’s credit card’s statement.
