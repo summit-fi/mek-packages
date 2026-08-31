@@ -75,8 +75,8 @@ class _YamlSink implements ChunkedConversionSink<Object?> {
     required this.indent,
     required this.shouldMultilineStringInBlock,
     required this.toEncodable,
-    required this._sink,
-  });
+    required StringConversionSink sink,
+  }) : _sink = sink;
 
   @override
   void add(Object? object) {
@@ -117,8 +117,8 @@ class _YamlWriter {
     required this.indent,
     required this.shouldMultilineStringInBlock,
     required this.toEncodable,
-    required this._sink,
-  });
+    required StringSink sink,
+  }) : _sink = sink;
 
   void write(Object? object) {
     if (object == null) {
