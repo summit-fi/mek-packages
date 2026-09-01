@@ -55,6 +55,8 @@ extension PaymentIntentStatus {
             return .succeeded
         case .requiresAction:
             return .requiresAction
+        case .requiresReauthorization:
+            return .requiresReauthorization
         @unknown default:
             fatalError("Not supported payment intent status: \(self)")
         }
@@ -69,7 +71,9 @@ extension CaptureMethod {
         case .automatic:
             return CaptureMethodApi.automatic
         @unknown default:
-            fatalError("Not supported CaptureMethodApi '\(self)'")
+            // Newer Stripe API versions return automatic_async by default.
+            // Preserve unknown native values when reading a PaymentIntent.
+            return CaptureMethodApi.automaticAsync
         }
     }
 }
@@ -123,12 +127,18 @@ extension PaymentMethodTypeApi {
 }
 
 extension CaptureMethodApi {
-    func toHost() -> CaptureMethod {
+    func toHost() throws -> CaptureMethod {
         switch self {
         case .automatic:
             return .automatic
         case .manual:
             return .manual
+        case .automaticAsync:
+            throw NSError(
+                domain: "mek_stripe_terminal",
+                code: 1,
+                userInfo: [NSLocalizedDescriptionKey: "CaptureMethod 'automatic_async' is not supported when creating a PaymentIntent through Terminal SDK"]
+            )
         }
     }
 }

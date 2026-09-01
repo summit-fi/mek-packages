@@ -303,6 +303,12 @@ enum CaptureMethodApi {
   /// the funds until later. Will require an explicit call to capture payments.
   /// (Not all payment methods support this.)
   manual,
+
+  /// Stripe asynchronously captures funds when the customer authorizes the payment.
+  ///
+  /// This value is returned by newer Stripe API versions by default. Terminal's
+  /// PaymentIntent parameters currently support only [automatic] and [manual].
+  automaticAsync,
 }
 
 enum ConfirmationMethodApi {

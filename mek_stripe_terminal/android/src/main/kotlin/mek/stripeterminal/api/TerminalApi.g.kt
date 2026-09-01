@@ -1344,7 +1344,14 @@ enum class CaptureMethodApi(val raw: Int) {
    * the funds until later. Will require an explicit call to capture payments.
    * (Not all payment methods support this.)
    */
-  MANUAL(1);
+  MANUAL(1),
+  /**
+   * Stripe asynchronously captures funds when the customer authorizes the payment.
+   *
+   * This value is returned by newer Stripe API versions by default. Terminal's
+   * PaymentIntent parameters currently support only [automatic] and [manual].
+   */
+  AUTOMATIC_ASYNC(2);
 
   companion object {
     fun ofRaw(raw: Int): CaptureMethodApi? {

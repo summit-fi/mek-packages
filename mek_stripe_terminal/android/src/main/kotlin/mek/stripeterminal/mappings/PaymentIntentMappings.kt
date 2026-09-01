@@ -31,6 +31,7 @@ fun PaymentIntent.toApi(): PaymentIntentApi {
         captureMethod = when (captureMethod ?: "") {
             "automatic" -> CaptureMethodApi.AUTOMATIC
             "manual" -> CaptureMethodApi.MANUAL
+            "automatic_async" -> CaptureMethodApi.AUTOMATIC_ASYNC
             else ->
                 throw IllegalArgumentException(
                     "Not supported CaptureMethod '$captureMethod' on PaymentIntent $id"
@@ -109,6 +110,10 @@ fun PaymentIntentParametersApi.toHost(): PaymentIntentParameters {
             captureMethod = when (captureMethod) {
                 CaptureMethodApi.MANUAL -> CaptureMethod.Manual
                 CaptureMethodApi.AUTOMATIC -> CaptureMethod.Automatic
+                CaptureMethodApi.AUTOMATIC_ASYNC ->
+                    throw IllegalArgumentException(
+                        "CaptureMethod 'automatic_async' is not supported when creating a PaymentIntent through Terminal SDK"
+                    )
             },
             paymentMethodTypes = paymentMethodTypes.map {
                 when (it) {

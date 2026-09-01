@@ -1021,6 +1021,11 @@ enum CaptureMethodApi: Int, CaseIterable {
   /// the funds until later. Will require an explicit call to capture payments.
   /// (Not all payment methods support this.)
   case manual = 1
+  /// Stripe asynchronously captures funds when the customer authorizes the payment.
+  ///
+  /// This value is returned by newer Stripe API versions by default. Terminal's
+  /// PaymentIntent parameters currently support only [automatic] and [manual].
+  case automaticAsync = 2
 }
 
 enum ConfirmationMethodApi: Int, CaseIterable {
