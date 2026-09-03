@@ -96,7 +96,7 @@ extension PaymentIntentParametersApi {
                 currency: currency
             )
             .setPaymentMethodTypes(paymentMethodTypes.map { $0.toHost() })
-            .setCaptureMethod(captureMethod.toHost())
+            .setCaptureMethod(try captureMethod.toHost())
             .setMetadata(metadata)
             .setStripeDescription(description)
             .setStatementDescriptor(statementDescriptor)
