@@ -595,6 +595,33 @@ enum TerminalExceptionCodeApi {
 
   /// Only Android. Simulated offline mode is not available in live mode.
   simulatedOfflineModeNotAvailableInLivemode,
+
+  /// Native Android SDK reported that a required prerequisite is missing.
+  missingPrerequisite,
+
+  /// Native Android SDK reported that the Tap to Pay library is not included.
+  tapToPayLibraryNotIncluded,
+
+  /// The reader canceled the operation.
+  canceledByReader,
+
+  /// iOS reported that the command had already completed when cancellation was requested.
+  cancelFailedAlreadyCompleted,
+
+  /// iOS connection token provider completed without returning a token or error.
+  connectionTokenProviderCompletedWithNothing,
+
+  /// iOS reported that the expected PaymentIntent was missing.
+  nilPaymentIntent,
+
+  /// iOS reported that the expected SetupIntent was missing.
+  nilSetupIntent,
+
+  /// iOS reported that the expected refund payment method was missing.
+  nilRefundPaymentMethod,
+
+  /// iOS reported an invalid discovery configuration.
+  invalidDiscoveryConfiguration,
 }
 
 class TerminalExceptionApi {
@@ -603,6 +630,7 @@ class TerminalExceptionApi {
   final String? stackTrace;
   final PaymentIntentApi? paymentIntent;
   final Object? apiError;
+  final String? nativeCode;
 
   TerminalExceptionApi({
     required this.code,
@@ -610,5 +638,6 @@ class TerminalExceptionApi {
     required this.stackTrace,
     required this.paymentIntent,
     required this.apiError,
+    required this.nativeCode,
   });
 }

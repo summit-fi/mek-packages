@@ -633,6 +633,24 @@ enum TerminalExceptionCodeApi: Int, CaseIterable {
   case barcodeScanningUnsupportedDevice = 149
   /// Only Android. Simulated offline mode is not available in live mode.
   case simulatedOfflineModeNotAvailableInLivemode = 150
+  /// Native Android SDK reported that a required prerequisite is missing.
+  case missingPrerequisite = 151
+  /// Native Android SDK reported that the Tap to Pay library is not included.
+  case tapToPayLibraryNotIncluded = 152
+  /// The reader canceled the operation.
+  case canceledByReader = 153
+  /// iOS reported that the command had already completed when cancellation was requested.
+  case cancelFailedAlreadyCompleted = 154
+  /// iOS connection token provider completed without returning a token or error.
+  case connectionTokenProviderCompletedWithNothing = 155
+  /// iOS reported that the expected PaymentIntent was missing.
+  case nilPaymentIntent = 156
+  /// iOS reported that the expected SetupIntent was missing.
+  case nilSetupIntent = 157
+  /// iOS reported that the expected refund payment method was missing.
+  case nilRefundPaymentMethod = 158
+  /// iOS reported an invalid discovery configuration.
+  case invalidDiscoveryConfiguration = 159
 }
 
 /// An enum representing the type of payment method being handled.
@@ -1105,6 +1123,7 @@ struct TerminalExceptionApi: Hashable, CustomStringConvertible {
   var stackTrace: String? = nil
   var paymentIntent: PaymentIntentApi? = nil
   var apiError: Any? = nil
+  var nativeCode: String? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
@@ -1114,13 +1133,15 @@ struct TerminalExceptionApi: Hashable, CustomStringConvertible {
     let stackTrace: String? = nilOrValue(pigeonVar_list[2])
     let paymentIntent: PaymentIntentApi? = nilOrValue(pigeonVar_list[3])
     let apiError: Any? = pigeonVar_list[4]
+    let nativeCode: String? = nilOrValue(pigeonVar_list[5])
 
     return TerminalExceptionApi(
       code: code,
       message: message,
       stackTrace: stackTrace,
       paymentIntent: paymentIntent,
-      apiError: apiError
+      apiError: apiError,
+      nativeCode: nativeCode
     )
   }
   func toList() -> [Any?] {
@@ -1130,6 +1151,7 @@ struct TerminalExceptionApi: Hashable, CustomStringConvertible {
       stackTrace,
       paymentIntent,
       apiError,
+      nativeCode,
     ]
   }
   static func == (lhs: TerminalExceptionApi, rhs: TerminalExceptionApi) -> Bool {
@@ -1146,10 +1168,11 @@ struct TerminalExceptionApi: Hashable, CustomStringConvertible {
     TerminalApiPigeonInternal.deepHash(value: stackTrace, hasher: &hasher)
     TerminalApiPigeonInternal.deepHash(value: paymentIntent, hasher: &hasher)
     TerminalApiPigeonInternal.deepHash(value: apiError, hasher: &hasher)
+    TerminalApiPigeonInternal.deepHash(value: nativeCode, hasher: &hasher)
   }
 
   public var description: String {
-    return "TerminalExceptionApi(code: \(String(describing: code)), message: \(String(describing: message)), stackTrace: \(String(describing: stackTrace)), paymentIntent: \(String(describing: paymentIntent)), apiError: \(String(describing: apiError)))"
+    return "TerminalExceptionApi(code: \(String(describing: code)), message: \(String(describing: message)), stackTrace: \(String(describing: stackTrace)), paymentIntent: \(String(describing: paymentIntent)), apiError: \(String(describing: apiError)), nativeCode: \(String(describing: nativeCode)))"
   }
 }
 

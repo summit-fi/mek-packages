@@ -7,7 +7,8 @@ func createApiException(_ code: TerminalExceptionCodeApi, _ message: String? = n
         message: message ?? "",
         stackTrace: nil,
         paymentIntent: nil,
-        apiError: nil
+        apiError: nil,
+        nativeCode: nil
  )
 }
 
@@ -32,12 +33,14 @@ extension NSError {
     
     func toApi(apiError: Error? = nil, paymentIntent: PaymentIntent? = nil) -> TerminalExceptionApi {
         let code = self.toApiCode();
+        let nativeCode = String(describing: ErrorCode(_nsError: self).code)
         return TerminalExceptionApi(
             code: code ?? TerminalExceptionCodeApi.unknown,
             message: localizedDescription,
             stackTrace: nil,
             paymentIntent: paymentIntent?.toApi(),
-            apiError: apiError?.localizedDescription
+            apiError: apiError?.localizedDescription,
+            nativeCode: nativeCode
         )
     }
     
@@ -46,24 +49,25 @@ extension NSError {
         
         switch error.code {
         case .cancelFailedAlreadyCompleted:
-            // Ignore this error, the plugin does not allow you to undo an operation more than once
-            return nil
+            return .cancelFailedAlreadyCompleted
         case .notConnectedToReader:
             return .notConnectedToReader
         case .alreadyConnectedToReader:
             return .alreadyConnectedToReader
         case .connectionTokenProviderCompletedWithNothing:
-            return nil
+            return .connectionTokenProviderCompletedWithNothing
         case .connectionTokenProviderCompletedWithNothingWhileForwarding:
             return .connectionTokenProviderErrorWhileForwarding
         case .confirmInvalidPaymentIntent:
             return .confirmInvalidPaymentIntent
         case .nilPaymentIntent:
-            return nil
+            return .nilPaymentIntent
         case .nilSetupIntent:
-            return nil
+            return .nilSetupIntent
         case .nilRefundPaymentMethod:
-            return nil
+            return .nilRefundPaymentMethod
+        case .invalidDiscoveryConfiguration:
+            return .invalidDiscoveryConfiguration
         case .invalidRefundParameters:
             return .invalidParameter
         case .invalidClientSecret:

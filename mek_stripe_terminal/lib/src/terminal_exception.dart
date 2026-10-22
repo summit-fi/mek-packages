@@ -9,6 +9,7 @@ class TerminalException implements Exception {
   final String? stackTrace;
   final PaymentIntent? paymentIntent;
   final Object? apiError;
+  final String? nativeCode;
 
   TerminalException({
     required this.code,
@@ -16,6 +17,7 @@ class TerminalException implements Exception {
     required this.stackTrace,
     required this.paymentIntent,
     required this.apiError,
+    required this.nativeCode,
   }) : message = (message.isEmpty ? code.message : message) ?? '';
 
   factory TerminalException.fromApi(TerminalExceptionApi data) {
@@ -25,12 +27,13 @@ class TerminalException implements Exception {
       stackTrace: data.stackTrace,
       paymentIntent: data.paymentIntent,
       apiError: data.apiError,
+      nativeCode: data.nativeCode,
     );
   }
 
   @override
   String toString() => [
-    'TerminalException: ${code.name}',
+    'TerminalException: ${code.name}${nativeCode == null ? '' : ' (native: $nativeCode)'}',
     message,
     if (paymentIntent != null) paymentIntent,
     if (apiError != null) apiError,

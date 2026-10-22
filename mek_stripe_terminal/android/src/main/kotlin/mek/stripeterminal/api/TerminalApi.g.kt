@@ -780,7 +780,25 @@ enum class TerminalExceptionCodeApi(val raw: Int) {
   /** Only Android. Barcode scanning is not supported on this device. */
   BARCODE_SCANNING_UNSUPPORTED_DEVICE(149),
   /** Only Android. Simulated offline mode is not available in live mode. */
-  SIMULATED_OFFLINE_MODE_NOT_AVAILABLE_IN_LIVEMODE(150);
+  SIMULATED_OFFLINE_MODE_NOT_AVAILABLE_IN_LIVEMODE(150),
+  /** Native Android SDK reported that a required prerequisite is missing. */
+  MISSING_PREREQUISITE(151),
+  /** Native Android SDK reported that the Tap to Pay library is not included. */
+  TAP_TO_PAY_LIBRARY_NOT_INCLUDED(152),
+  /** The reader canceled the operation. */
+  CANCELED_BY_READER(153),
+  /** iOS reported that the command had already completed when cancellation was requested. */
+  CANCEL_FAILED_ALREADY_COMPLETED(154),
+  /** iOS connection token provider completed without returning a token or error. */
+  CONNECTION_TOKEN_PROVIDER_COMPLETED_WITH_NOTHING(155),
+  /** iOS reported that the expected PaymentIntent was missing. */
+  NIL_PAYMENT_INTENT(156),
+  /** iOS reported that the expected SetupIntent was missing. */
+  NIL_SETUP_INTENT(157),
+  /** iOS reported that the expected refund payment method was missing. */
+  NIL_REFUND_PAYMENT_METHOD(158),
+  /** iOS reported an invalid discovery configuration. */
+  INVALID_DISCOVERY_CONFIGURATION(159);
 
   companion object {
     fun ofRaw(raw: Int): TerminalExceptionCodeApi? {
@@ -1496,7 +1514,8 @@ data class TerminalExceptionApi (
   val message: String,
   val stackTrace: String? = null,
   val paymentIntent: PaymentIntentApi? = null,
-  val apiError: Any? = null
+  val apiError: Any? = null,
+  val nativeCode: String? = null
 )
  {
   companion object {
@@ -1506,7 +1525,8 @@ data class TerminalExceptionApi (
       val stackTrace = pigeonVar_list[2] as String?
       val paymentIntent = pigeonVar_list[3] as PaymentIntentApi?
       val apiError = pigeonVar_list[4]
-      return TerminalExceptionApi(code, message, stackTrace, paymentIntent, apiError)
+      val nativeCode = pigeonVar_list[5] as String?
+      return TerminalExceptionApi(code, message, stackTrace, paymentIntent, apiError, nativeCode)
     }
   }
   fun toList(): List<Any?> {
@@ -1516,6 +1536,7 @@ data class TerminalExceptionApi (
       stackTrace,
       paymentIntent,
       apiError,
+      nativeCode,
     )
   }
   override fun equals(other: Any?): Boolean {
@@ -1536,10 +1557,11 @@ data class TerminalExceptionApi (
     result = 31 * result + TerminalApiPigeonUtils.deepHash(this.stackTrace)
     result = 31 * result + TerminalApiPigeonUtils.deepHash(this.paymentIntent)
     result = 31 * result + TerminalApiPigeonUtils.deepHash(this.apiError)
+    result = 31 * result + TerminalApiPigeonUtils.deepHash(this.nativeCode)
     return result
   }
   override fun toString(): String {
-    return "TerminalExceptionApi(code=$code, message=$message, stackTrace=$stackTrace, paymentIntent=$paymentIntent, apiError=$apiError)"
+    return "TerminalExceptionApi(code=$code, message=$message, stackTrace=$stackTrace, paymentIntent=$paymentIntent, apiError=$apiError, nativeCode=$nativeCode)"
   }
 }
 

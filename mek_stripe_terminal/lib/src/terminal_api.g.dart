@@ -695,6 +695,33 @@ enum TerminalExceptionCodeApi {
 
   /// Only Android. Simulated offline mode is not available in live mode.
   simulatedOfflineModeNotAvailableInLivemode,
+
+  /// Native Android SDK reported that a required prerequisite is missing.
+  missingPrerequisite,
+
+  /// Native Android SDK reported that the Tap to Pay library is not included.
+  tapToPayLibraryNotIncluded,
+
+  /// The reader canceled the operation.
+  canceledByReader,
+
+  /// iOS reported that the command had already completed when cancellation was requested.
+  cancelFailedAlreadyCompleted,
+
+  /// iOS connection token provider completed without returning a token or error.
+  connectionTokenProviderCompletedWithNothing,
+
+  /// iOS reported that the expected PaymentIntent was missing.
+  nilPaymentIntent,
+
+  /// iOS reported that the expected SetupIntent was missing.
+  nilSetupIntent,
+
+  /// iOS reported that the expected refund payment method was missing.
+  nilRefundPaymentMethod,
+
+  /// iOS reported an invalid discovery configuration.
+  invalidDiscoveryConfiguration,
 }
 
 /// An enum representing the type of payment method being handled.
@@ -1245,6 +1272,7 @@ class TerminalExceptionApi {
     this.stackTrace,
     this.paymentIntent,
     this.apiError,
+    this.nativeCode,
   });
 
   TerminalExceptionCodeApi code;
@@ -1257,8 +1285,10 @@ class TerminalExceptionApi {
 
   Object? apiError;
 
+  String? nativeCode;
+
   List<Object?> _toList() {
-    return <Object?>[code, message, stackTrace, paymentIntent, apiError];
+    return <Object?>[code, message, stackTrace, paymentIntent, apiError, nativeCode];
   }
 
   Object encode() {
@@ -1273,6 +1303,7 @@ class TerminalExceptionApi {
       stackTrace: result[2] as String?,
       paymentIntent: result[3] as PaymentIntentApi?,
       apiError: result[4],
+      nativeCode: result[5] as String?,
     );
   }
 
@@ -1289,7 +1320,8 @@ class TerminalExceptionApi {
         _deepEquals(message, other.message) &&
         _deepEquals(stackTrace, other.stackTrace) &&
         _deepEquals(paymentIntent, other.paymentIntent) &&
-        _deepEquals(apiError, other.apiError);
+        _deepEquals(apiError, other.apiError) &&
+        _deepEquals(nativeCode, other.nativeCode);
   }
 
   @override
@@ -1298,7 +1330,7 @@ class TerminalExceptionApi {
 
   @override
   String toString() {
-    return 'TerminalExceptionApi(code: $code, message: $message, stackTrace: $stackTrace, paymentIntent: $paymentIntent, apiError: $apiError)';
+    return 'TerminalExceptionApi(code: $code, message: $message, stackTrace: $stackTrace, paymentIntent: $paymentIntent, apiError: $apiError, nativeCode: $nativeCode)';
   }
 }
 
