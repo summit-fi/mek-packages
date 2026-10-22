@@ -8,8 +8,10 @@ extension ReaderUtils on Reader {
   BatteryStatusApi? get batteryStatus {
     final level = batteryLevel;
     if (level == null || level == -1) return null;
+    if (level >= BatteryStatusApi.nominal.maxLevel) return BatteryStatusApi.nominal;
+
     return BatteryStatusApi.values.singleWhere((e) {
-      return level > e.minLevel && level < e.maxLevel;
+      return level >= e.minLevel && level < e.maxLevel;
     });
   }
 }

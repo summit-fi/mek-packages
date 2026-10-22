@@ -34,6 +34,18 @@ void main() {
     expect(reader.batteryStatus, isNull);
   });
 
+  test('reader reports nominal battery status at full charge', () {
+    final reader = ReaderApi(simulated: false, batteryLevel: 1.0);
+
+    expect(reader.batteryStatus, BatteryStatus.nominal);
+  });
+
+  test('reader reports the correct status at battery boundaries', () {
+    expect(ReaderApi(simulated: false, batteryLevel: 0.0).batteryStatus, BatteryStatus.critical);
+    expect(ReaderApi(simulated: false, batteryLevel: 0.05).batteryStatus, BatteryStatus.low);
+    expect(ReaderApi(simulated: false, batteryLevel: 0.2).batteryStatus, BatteryStatus.nominal);
+  });
+
   test('refund with unavailable created date is represented as null', () {
     final refund = RefundApi(id: 're_test');
 
