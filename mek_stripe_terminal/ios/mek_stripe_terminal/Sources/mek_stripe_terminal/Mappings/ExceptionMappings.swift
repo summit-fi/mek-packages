@@ -72,8 +72,6 @@ extension NSError {
             return .invalidParameter
         case .invalidClientSecret:
             return .invalidClientSecret
-        case .invalidDiscoveryConfiguration:
-            return nil
         case .invalidReaderForUpdate:
             return .invalidReaderForUpdate
         case .unsupportedSDK:

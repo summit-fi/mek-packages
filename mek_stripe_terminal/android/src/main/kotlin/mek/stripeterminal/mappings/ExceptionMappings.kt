@@ -55,7 +55,6 @@ private fun TerminalErrorCode.toApiCode(): TerminalExceptionCodeApi? {
         TerminalErrorCode.INVALID_REQUIRED_PARAMETER -> TerminalExceptionCodeApi.INVALID_REQUIRED_PARAMETER
         TerminalErrorCode.INVALID_TIP_PARAMETER -> TerminalExceptionCodeApi.INVALID_TIP_PARAMETER
         TerminalErrorCode.TAP_TO_PAY_LIBRARY_NOT_INCLUDED -> TerminalExceptionCodeApi.TAP_TO_PAY_LIBRARY_NOT_INCLUDED
-        TerminalErrorCode.CANCELED_BY_READER -> TerminalExceptionCodeApi.CANCELED_BY_READER
         TerminalErrorCode.TAP_TO_PAY_UNSUPPORTED_DEVICE -> TerminalExceptionCodeApi.TAP_TO_PAY_UNSUPPORTED_DEVICE
         TerminalErrorCode.TAP_TO_PAY_UNSUPPORTED_ANDROID_VERSION -> TerminalExceptionCodeApi.TAP_TO_PAY_UNSUPPORTED_OPERATING_SYSTEM_VERSION
         TerminalErrorCode.TAP_TO_PAY_DEVICE_TAMPERED -> TerminalExceptionCodeApi.TAP_TO_PAY_DEVICE_TAMPERED
